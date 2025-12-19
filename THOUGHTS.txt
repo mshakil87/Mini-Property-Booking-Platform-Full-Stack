@@ -1,0 +1,50 @@
+Architecture
+- Separate React apps for guests and admins for clear role-based UX.
+- Laravel API with repository interfaces bound to Eloquent implementations for testability.
+- Media stored on disk via Laravel storage with database records in `property_media`.
+- Properties store a lightweight `images` array for fast rendering; `media` covers uploads and video.
+
+Design Patterns
+- Repository pattern isolates data access from services/controllers.
+- Services encapsulate domain logic (availability checks, booking rules).
+- Middleware guards admin actions with a simple role check.
+
+Schema Choices
+- `properties`: title, description, price_per_night (decimal), location, amenities (json), images (json).
+- `property_media`: property_id, type (image|video), path, caption, mime_type, size.
+- `availabilities`: property_id, start_date, end_date for open booking ranges.
+- `bookings`: property_id, user_id, start_date, end_date, total_price, status.
+
+Programming Approach
+- Keep controllers thin; validation + delegate to services.
+- Use pagination from Laravel for all listings to keep responses small.
+- Favor simple, composable React pages with Tailwind utility classes.
+- Frontend navigation: Ensured consistent routing by removing explicit '/admin' prefixes from internal navigation links after adjusting BrowserRouter configuration, resolving 'No routes matched' errors.
+
+Admin UX
+- Clean design: white header, bordered cards, focused forms.
+- Full CRUD on properties, inline edit form, media manager with file upload, booking moderation.
+- Pagination added to properties and bookings for scalability.
+- Refactored property management: separated 'Add Property' and 'Edit Property' into distinct pages for better maintainability and clearer user flow.
+- Implemented search and filter capabilities for both properties (by title/location and featured status) and bookings (by property title/user email and status) to improve administrative efficiency.
+
+Frontend UX
+- Catchy gradient header using Tailwind, focused content sections.
+- Listings with filters and pagination; details show images (dummyimage.com) and uploaded media.
+- Booking flow redirects unauthenticated users to login and back to target.
+
+Seeding
+- 100 properties with varied amenities.
+- Images via `https://dummyimage.com/` to avoid missing files.
+- Sample bookings for admin testing; storage symlink for uploaded media.
+
+Tradeoffs
+- Simple availability model (no overlapping checks beyond service-level rules).
+- Client-side pagination controls based on Laravel paginator meta.
+- No global state manager; localStorage token suffices for this scope.
+
+Future Improvements
+- Role-based routing and nav with user context.
+- Image optimization and lazy loading.
+- Better availability editor (merge/split ranges).
+- Email notifications via queued jobs beyond logging.

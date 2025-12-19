@@ -1,0 +1,44 @@
+# Laravel specific ignores
+/apps/api/.env
+/apps/api/vendor
+/apps/api/public/hot
+/apps/api/public/storage
+/apps/api/storage/*.key
+/apps/api/bootstrap/cache/*.php
+/apps/api/Homestead.json
+/apps/api/Homestead.yaml
+/apps/api/npm-debug.log
+/apps/api/yarn-error.log
+
+# React specific ignores (and common for both)
+/apps/fontend/node_modules
+/apps/fontend/build
+/apps/fontend/dist
+/apps/fontend/.env.local
+/apps/fontend/.env.development.local
+/apps/fontend/.env.test.local
+/apps/fontend/.env.production.local
+/apps/fontend/npm-debug.log*
+/apps/fontend/yarn-debug.log*
+/apps/fontend/yarn-error.log*
+
+/apps/admin-panel/node_modules
+/apps/admin-panel/build
+/apps/admin-panel/dist
+/apps/admin-panel/.env.local
+/apps/admin-panel/.env.development.local
+/apps/admin-panel/.env.test.local
+/apps/admin-panel/.env.production.local
+/apps/admin-panel/npm-debug.log*
+/apps/admin-panel/yarn-debug.log*
+/apps/admin-panel/yarn-error.log*
+
+# IDE specific ignores
+/.idea
+/.vscode
+
+# Misc
+.DS_Store
+*.log
+*.tgz
+.eslintcache

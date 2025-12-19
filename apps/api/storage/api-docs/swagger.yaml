@@ -1,0 +1,30 @@
+openapi: 3.0.3
+info:
+  title: LivedIn API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+paths:
+  /properties:
+    get:
+      summary: List properties
+      responses:
+        '200':
+          description: OK
+  /auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
