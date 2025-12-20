@@ -61,3 +61,4 @@ Future Improvements
 - Image optimization and lazy loading.
 - Better availability editor (merge/split ranges).
 - Email notifications via queued jobs beyond logging.
+

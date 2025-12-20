@@ -56,6 +56,11 @@ This project uses Laravel queues for background tasks (like sending booking conf
 - Guest: `guest@example.com` / `password`
 - API endpoints use Laravel Sanctum tokens.
 
+## API Documentation
+The project includes Swagger API documentation for easier integration and testing.
+- **URL:** `http://localhost:8000/api/documentation` (Ensure API server is running)
+- **Features:** Interactive requests, authentication testing, and endpoint overview.
+
 ## Features
 - Properties with amenities, images, and media gallery
 - Availability ranges and booking flow

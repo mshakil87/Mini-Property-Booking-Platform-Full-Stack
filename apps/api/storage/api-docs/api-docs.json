@@ -1,0 +1,1099 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Mini Property Rental API Documentation",
+        "description": "API Documentation for the Mini Property Rental Project",
+        "contact": {
+            "email": "admin@example.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Primary API Server"
+        }
+    ],
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Login",
+                "operationId": "f77777235d676b651c9465807d8f9485",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "guest@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Registration",
+                "operationId": "eb3623f9bcd09a1dacbefaac07aed1bb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful registration",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Forgot Password",
+                "operationId": "2ff34b78f6179fa71cf21ca9802918c4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset link sent"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/auth/change-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Change Password",
+                "operationId": "e191a4838c8fb1448a74790113e4740e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "old_password",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "old_password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "new_password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "new_password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password changed successfully"
+                    },
+                    "422": {
+                        "description": "Validation error or old password mismatch"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Logout",
+                "operationId": "c4b3c6f1776909e546a421283c044ac3",
+                "responses": {
+                    "200": {
+                        "description": "Successful logout"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties/{property}/availability": {
+            "get": {
+                "tags": [
+                    "Property Availability"
+                ],
+                "summary": "List availability for a property",
+                "operationId": "966c9ce37769bd21adbc1dbd511dd131",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Property Availability"
+                ],
+                "summary": "Create availability for a property (Admin only)",
+                "operationId": "e95b7572f216bfb827b6209bd739bdea",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "start_date",
+                                    "end_date"
+                                ],
+                                "properties": {
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-12-25"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-12-30"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Availability created successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error or overlapping range"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties/{property}/availability/{availability}": {
+            "delete": {
+                "tags": [
+                    "Property Availability"
+                ],
+                "summary": "Delete property availability (Admin only)",
+                "operationId": "10bed9659f075d0da1954f1b88e53a16",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "availability",
+                        "in": "path",
+                        "description": "Availability ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Availability deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Availability or Property not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "List all bookings (Admin only)",
+                "operationId": "765b47cd69dd801947e6db98c2448c90",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by property title or user email",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status (pending, confirmed, rejected)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "confirmed",
+                                "rejected"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Create a new booking request",
+                "operationId": "893be3fcfe94b319a05e6e01eed19c8e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id",
+                                    "start_date",
+                                    "end_date"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-12-25"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-12-30"
+                                    },
+                                    "guest_name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "guest_email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "guest_phone": {
+                                        "type": "string",
+                                        "example": "+1234567890"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Booking requested successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation error or dates unavailable"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/me": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "List authenticated user's bookings",
+                "operationId": "7fc3ee1e9fefac2e670386a28e3cea5b",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/{booking}/confirm": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Confirm a booking request (Admin only)",
+                "operationId": "fdb7d7dcba3e12e2829d7c98ac41e219",
+                "parameters": [
+                    {
+                        "name": "booking",
+                        "in": "path",
+                        "description": "Booking ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Booking confirmed successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Booking not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/{booking}/reject": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Reject a booking request (Admin only)",
+                "operationId": "c524e7954d877c1405f14a39d6748b48",
+                "parameters": [
+                    {
+                        "name": "booking",
+                        "in": "path",
+                        "description": "Booking ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Booking rejected successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Booking not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cities": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "List all cities",
+                "operationId": "c822efcc3a583121c365f5be793afce0",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/properties": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get all properties",
+                "operationId": "6e387a77d712ad025ae4dbbe58f9de35",
+                "parameters": [
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of properties"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Create a new property (Admin only)",
+                "operationId": "9f76887beafa8292ed82539c80bf512f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "price_per_night",
+                                    "city_id"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Luxury Villa"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A beautiful villa with sea view"
+                                    },
+                                    "price_per_night": {
+                                        "type": "number",
+                                        "example": 150
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Beach Road 123"
+                                    },
+                                    "city_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_featured": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "amenities": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "WiFi",
+                                            "Pool"
+                                        ]
+                                    },
+                                    "images": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Property created successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties/{id}": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get property details",
+                "operationId": "fe8700ea91a142f83d73a651f84758fb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Property details"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                }
+            }
+        },
+        "/api/properties/{property}": {
+            "put": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Update an existing property (Admin only)",
+                "operationId": "91e2008997b20e4b4b4f48869fd8328f",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Luxury Villa Updated"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "An updated description"
+                                    },
+                                    "price_per_night": {
+                                        "type": "number",
+                                        "example": 200
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Beach Road 124"
+                                    },
+                                    "city_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_featured": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "amenities": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "WiFi",
+                                            "Pool",
+                                            "Gym"
+                                        ]
+                                    },
+                                    "images": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Property updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Delete a property (Admin only)",
+                "operationId": "e330481e5e5ab74ec09cae713e922891",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Property deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties/{property}/media": {
+            "get": {
+                "tags": [
+                    "Property Media"
+                ],
+                "summary": "List media for a property",
+                "operationId": "b0e1a5811722af07da9272dd7824eae3",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Property Media"
+                ],
+                "summary": "Upload media for a property (Admin only)",
+                "operationId": "d10a0ebca462822b8d47bacd8dbdf931",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "description": "Image or video file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "caption": {
+                                        "description": "Optional caption",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Media uploaded successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties/{property}/media/{media}": {
+            "delete": {
+                "tags": [
+                    "Property Media"
+                ],
+                "summary": "Delete property media (Admin only)",
+                "operationId": "52769969b6cb9707b5e90f5aea0911f9",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "media",
+                        "in": "path",
+                        "description": "Media ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Media deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Media or Property not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Login with email and password to get the authentication token",
+                "name": "Token Based",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Property Availability",
+            "description": "Property Availability"
+        },
+        {
+            "name": "Bookings",
+            "description": "Bookings"
+        },
+        {
+            "name": "Cities",
+            "description": "Cities"
+        },
+        {
+            "name": "Properties",
+            "description": "Properties"
+        },
+        {
+            "name": "Property Media",
+            "description": "Property Media"
+        }
+    ]
+}

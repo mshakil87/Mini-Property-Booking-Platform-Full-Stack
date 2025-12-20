@@ -9,7 +9,7 @@ use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\PropertyMediaController;
 
 Route::middleware('throttle:auth')->group(function () {
-    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
     Route::post('/auth/register', [AuthController::class, 'register']);
     Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
