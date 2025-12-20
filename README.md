@@ -57,6 +57,12 @@
 - "Add Property" button on Admin Property listing
 - Search and filter functionality for Admin Properties (by title/location) and Bookings (by property title/user email and status)
 - Pagination on listings and bookings
+- Redesigned Admin Panel Login Page with improved styling and redirection on successful login.
+- Enhanced error handling for property updates in the Admin Panel.
+- Image slider/gallery with auto-start and full-size image pop-up functionality on frontend property details page.
+
+## Troubleshooting
+- **Direct URL Access (404 errors in development/preview):** If you encounter 404 errors when directly accessing routes (e.g., `/properties`, `/bookings`) in the frontend or admin panel development/preview environments, ensure `historyApiFallback: true` is configured in `vite.config.ts` for the `preview` server. This allows client-side routing to handle non-static asset requests.
 
 ## Media
 - Admin can upload images/videos stored under `storage/app/public/property-media/<propertyId>/...`

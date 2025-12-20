@@ -27,11 +27,16 @@ Admin UX
 - Pagination added to properties and bookings for scalability.
 - Refactored property management: separated 'Add Property' and 'Edit Property' into distinct pages for better maintainability and clearer user flow.
 - Implemented search and filter capabilities for both properties (by title/location and featured status) and bookings (by property title/user email and status) to improve administrative efficiency.
+- Redesigned login page for a more professional look, with styled success/error messages and automatic redirection to the dashboard upon successful login.
+- Enhanced error handling for property updates to provide more specific feedback from the API.
+- Resolved "No routes matched" errors by ensuring correct router configuration and `historyApiFallback` for direct URL access.
 
 Frontend UX
 - Catchy gradient header using Tailwind, focused content sections.
 - Listings with filters and pagination; details show images (dummyimage.com) and uploaded media.
 - Booking flow redirects unauthenticated users to login and back to target.
+- Removed date picker from property details page to streamline the booking process.
+- Confirmed existing image slider/gallery functionality with auto-start and full-size image pop-up on click.
 
 Seeding
 - 100 properties with varied amenities.
@@ -42,6 +47,9 @@ Tradeoffs
 - Simple availability model (no overlapping checks beyond service-level rules).
 - Client-side pagination controls based on Laravel paginator meta.
 - No global state manager; localStorage token suffices for this scope.
+
+Troubleshooting
+- **Direct URL Access (404 errors in development/preview):** If encountering 404 errors when directly accessing routes (e.g., `/properties`, `/bookings`) in the frontend or admin panel development/preview environments, ensure `historyApiFallback: true` is configured in `vite.config.ts` for the `preview` server. This allows client-side routing to handle non-static asset requests.
 
 Future Improvements
 - Role-based routing and nav with user context.

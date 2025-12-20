@@ -27,7 +27,7 @@ class PropertyController extends Controller
 
     public function show(Property $property)
     {
-        $property->load(['availabilities', 'bookings', 'media']);
+        $property->load(['availabilities', 'bookings', 'media', 'city']);
         return $property;
     }
 
