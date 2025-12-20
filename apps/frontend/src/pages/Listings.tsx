@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 import { api } from '../lib/api'
 
 type Property = {
@@ -10,6 +11,9 @@ type Property = {
   images?: string[]
   featured_image?: string
   is_featured?: boolean
+  city?: {
+    name: string
+  }
 }
 
 export default function Listings() {
@@ -19,9 +23,26 @@ export default function Listings() {
   const [page, setPage] = useState(1)
   const [meta, setMeta] = useState<any>(null)
 
+  const hasFilters = filters.location || filters.min_price || filters.max_price || filters.date;
+
+  const clearFilters = () => {
+    setFilters({ location: '', min_price: '', max_price: '', date: '' });
+    setPage(1);
+  };
+
   useEffect(() => {
+    // If location is provided but less than 3 characters, don't trigger search
+    if (filters.location && filters.location.length > 0 && filters.location.length < 3) {
+      return;
+    }
+
+    const controller = new AbortController();
     setLoading(true)
-    api.get('/properties', { params: { ...filters, page, per_page: 10 } })
+    
+    api.get('/properties', { 
+      params: { ...filters, page, per_page: 10 },
+      signal: controller.signal
+    })
       .then(res => {
         const data = res.data.data ?? res.data
         // Sort properties to prioritize featured ones
@@ -33,20 +54,40 @@ export default function Listings() {
         setItems(sortedData)
         setMeta(res.data)
       })
+      .catch(err => {
+        if (axios.isCancel(err)) {
+          // Silent catch for cancelled requests
+        } else {
+          console.error('Error fetching properties:', err)
+        }
+      })
       .finally(() => setLoading(false))
+
+    return () => controller.abort();
   }, [filters, page])
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <input className="border p-2" placeholder="Location" value={filters.location}
-               onChange={e => setFilters({ ...filters, location: e.target.value })} />
-        <input className="border p-2" placeholder="Min price" value={filters.min_price}
-               onChange={e => setFilters({ ...filters, min_price: e.target.value })} />
-        <input className="border p-2" placeholder="Max price" value={filters.max_price}
-               onChange={e => setFilters({ ...filters, max_price: e.target.value })} />
-        <input type="date" className="border p-2" value={filters.date}
-               onChange={e => setFilters({ ...filters, date: e.target.value })} />
+      <div className="flex justify-between items-center mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
+          <input className="border p-2 rounded-lg" placeholder="Search by name or city..." value={filters.location}
+                 onChange={e => setFilters({ ...filters, location: e.target.value })} />
+          <input className="border p-2 rounded-lg" placeholder="Min price" value={filters.min_price}
+                 onChange={e => setFilters({ ...filters, min_price: e.target.value })} />
+          <input className="border p-2 rounded-lg" placeholder="Max price" value={filters.max_price}
+                 onChange={e => setFilters({ ...filters, max_price: e.target.value })} />
+          <input type="date" className="border p-2 rounded-lg" value={filters.date}
+                 onChange={e => setFilters({ ...filters, date: e.target.value })} />
+        </div>
+        {hasFilters && (
+          <button 
+            onClick={clearFilters}
+            className="ml-4 px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex items-center space-x-1"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            <span>Clear</span>
+          </button>
+        )}
       </div>
 
       {loading ? <p>Loading...</p> : (
@@ -58,7 +99,7 @@ export default function Listings() {
               )}
               <div className="p-4">
               <h3 className="font-semibold">{p.title}</h3>
-              <p className="text-sm text-gray-500">{p.location ?? 'Location not available'}</p>
+              <p className="text-sm text-gray-500">{p.city?.name ?? p.location ?? 'Location not available'}</p>
               <p className="text-sm mt-2">${p.price_per_night} per night</p>
               </div>
             </Link>

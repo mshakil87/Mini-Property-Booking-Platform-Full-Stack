@@ -21,6 +21,7 @@ class PropertyController extends Controller
             'max_price' => $request->query('max_price'),
             'date' => $request->query('date'),
             'search' => $request->query('search'),
+            'is_featured' => $request->query('is_featured'),
         ];
         return $this->properties->list(array_filter($filters, fn ($v) => $v !== null));
     }
@@ -37,7 +38,9 @@ class PropertyController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price_per_night' => ['required', 'numeric', 'min:0'],
+            'location' => ['nullable', 'string', 'max:255'],
             'city_id' => ['required', 'exists:cities,id'],
+            'is_featured' => ['sometimes', 'boolean'],
             'amenities' => ['array'],
             'images' => ['array'],
         ]);
@@ -50,7 +53,9 @@ class PropertyController extends Controller
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price_per_night' => ['sometimes', 'numeric', 'min:0'],
+            'location' => ['nullable', 'string', 'max:255'],
             'city_id' => ['sometimes', 'exists:cities,id'],
+            'is_featured' => ['sometimes', 'boolean'],
             'amenities' => ['array'],
             'images' => ['array'],
         ]);

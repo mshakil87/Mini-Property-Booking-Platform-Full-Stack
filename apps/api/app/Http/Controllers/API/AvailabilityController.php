@@ -26,9 +26,23 @@ class AvailabilityController extends Controller
             'end_date' => ['required', 'date', 'after:start_date'],
         ]);
 
-        if (!$this->availabilities->isRangeAvailable($property->id, $data['start_date'], $data['end_date'])) {
-            // We allow multiple availability ranges but they must be within existing ranges or create new entries
-            // For simplicity, we just insert this range.
+        // Check for overlapping availability
+        $overlapping = Availability::where('property_id', $property->id)
+            ->where(function ($query) use ($data) {
+                $query->where(function ($q) use ($data) {
+                    $q->where('start_date', '<=', $data['start_date'])
+                      ->where('end_date', '>=', $data['start_date']);
+                })->orWhere(function ($q) use ($data) {
+                    $q->where('start_date', '<=', $data['end_date'])
+                      ->where('end_date', '>=', $data['end_date']);
+                })->orWhere(function ($q) use ($data) {
+                    $q->where('start_date', '>=', $data['start_date'])
+                      ->where('end_date', '<=', $data['end_date']);
+                });
+            })->exists();
+
+        if ($overlapping) {
+            return response()->json(['message' => 'The selected availability range overlaps with an existing range.'], 422);
         }
 
         return response()->json(

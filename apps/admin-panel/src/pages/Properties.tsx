@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api, authHeader } from '../lib/api'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 export default function Properties() {
   const navigate = useNavigate()
@@ -11,7 +12,20 @@ export default function Properties() {
   const [search, setSearch] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
 
+  const hasSearch = search || isFeatured;
+
+  const clearSearch = () => {
+    setSearch('');
+    setIsFeatured(false);
+    setPage(1);
+  };
+
   useEffect(() => {
+    if (search && search.length > 0 && search.length < 3) {
+      return;
+    }
+
+    const controller = new AbortController();
     const params: any = { page, per_page: 10 }
     if (search) {
       params.search = search
@@ -19,18 +33,38 @@ export default function Properties() {
     if (isFeatured) {
       params.is_featured = true
     }
-    api.get('/properties', { params }).then(res => {
+    api.get('/properties', { 
+      params,
+      signal: controller.signal
+    }).then(res => {
       const data = res.data.data ?? res.data
       setItems(data)
       setMeta(res.data)
+    }).catch(err => {
+      if (axios.isCancel(err)) {
+        // Silent catch for cancelled requests
+      } else {
+        console.error('Error fetching properties:', err)
+      }
     })
+
+    return () => controller.abort();
   }, [page, search, isFeatured])
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Properties</h2>
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 items-center">
+          {hasSearch && (
+            <button 
+              onClick={clearSearch}
+              className="text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors flex items-center space-x-1"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <span>Clear</span>
+            </button>
+          )}
           <input
             type="text"
             placeholder="Search properties..."
@@ -66,7 +100,7 @@ export default function Properties() {
           <div key={p.id} className="bg-white border rounded-xl p-4 flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
             <div>
               <p className="font-semibold text-gray-800 text-lg">{p.title}</p>
-              <p className="text-sm text-gray-500">${p.price_per_night} • {p.location}</p>
+              <p className="text-sm text-gray-500">${p.price_per_night} • {p.city?.name ?? 'Location not available'}</p>
               {p.is_featured && <span className="inline-block mt-2 text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full font-medium">Featured</span>}
             </div>
             <div className="flex items-center space-x-3">

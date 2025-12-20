@@ -16,5 +16,19 @@ class AuthService
         $token = $user->createToken('api')->plainTextToken;
         return ['user' => $user, 'token' => $token];
     }
+
+    public function register(array $data): array
+    {
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role' => 'guest', // Default role for new signups
+        ]);
+
+        $token = $user->createToken('api')->plainTextToken;
+
+        return ['user' => $user, 'token' => $token];
+    }
 }
 

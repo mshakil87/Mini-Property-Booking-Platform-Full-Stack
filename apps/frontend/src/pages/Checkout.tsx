@@ -19,6 +19,19 @@ export default function Checkout() {
       navigate(`/login?redirect=/checkout/${id}`);
       return;
     }
+    
+    // Populate user info from localStorage if available
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        if (user.name) setGuestName(user.name);
+        if (user.email) setGuestEmail(user.email);
+      } catch (e) {
+        console.error('Failed to parse user data', e);
+      }
+    }
+
     api.get(`/properties/${id}`).then(res => setProperty(res.data));
   }, [id, navigate, token]);
 
@@ -83,31 +96,33 @@ export default function Checkout() {
             required
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startDate">
-            Start Date
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="startDate"
-            type="date"
-            value={start}
-            onChange={(e) => setStart(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="endDate">
-            End Date
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="endDate"
-            type="date"
-            value={end}
-            onChange={(e) => setEnd(e.target.value)}
-            required
-          />
+        <div className='grid grid-cols-1 md:grid-cols-6 gap-4'>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startDate">
+              Start Date
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="startDate"
+              type="date"
+              value={start}
+              onChange={(e) => setStart(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="endDate">
+              End Date
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="endDate"
+              type="date"
+              value={end}
+              onChange={(e) => setEnd(e.target.value)}
+              required
+            />
+          </div>
         </div>
         <div className="flex items-center justify-between">
           <button

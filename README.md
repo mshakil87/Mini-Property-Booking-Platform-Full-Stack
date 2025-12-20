@@ -1,4 +1,4 @@
-# LivedIn Project
+# Mini Property Rental Project
 
 ## Overview
 - API: Laravel (`apps/api`)
@@ -39,6 +39,13 @@
   - `cd apps/admin-panel`
   - `npm run dev`
   - Base URL: `http://localhost:5174`
+  
+## Queues & Background Jobs
+This project uses Laravel queues for background tasks (like sending booking confirmation emails).
+1. Ensure `QUEUE_CONNECTION=database` is set in your `apps/api/.env`.
+2. Run the queue worker:
+   - `cd apps/api`
+   - `php artisan queue:work`
 
 ## Production Build
 - Frontend: `cd apps/frontend && npm run build`
@@ -60,6 +67,13 @@
 - Redesigned Admin Panel Login Page with improved styling and redirection on successful login.
 - Enhanced error handling for property updates in the Admin Panel.
 - Image slider/gallery with auto-start and full-size image pop-up functionality on frontend property details page.
+- **Change Password Functionality:** Secure password update feature for authenticated guest users in the frontend.
+- **Improved Property Search:** Enhanced search logic to filter by property name (title) and city name across both frontend and admin panels.
+- **Tiered API Rate Limiting:** Implemented security throttling across all endpoints:
+  - Auth APIs: 5 requests/min
+  - Public APIs: 20 requests/min
+  - Private/Admin APIs: 15 requests/min
+- **Search UX Enhancements:** Added "Clear" buttons to property filters for quick reset of search parameters.
 
 ## Troubleshooting
 - **Direct URL Access (404 errors in development/preview):** If you encounter 404 errors when directly accessing routes (e.g., `/properties`, `/bookings`) in the frontend or admin panel development/preview environments, ensure `historyApiFallback: true` is configured in `vite.config.ts` for the `preview` server. This allows client-side routing to handle non-static asset requests.

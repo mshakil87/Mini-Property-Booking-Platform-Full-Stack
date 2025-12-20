@@ -13,7 +13,13 @@ class PropertyRepository implements PropertyRepositoryInterface
     {
         $query = Property::with('city');
         if (isset($filters['location'])) {
-            $query->where('location', 'like', '%'.$filters['location'].'%');
+            $location = $filters['location'];
+            $query->where(function ($q) use ($location) {
+                $q->where('title', 'like', '%'.$location.'%')
+                  ->orWhereHas('city', function ($q) use ($location) {
+                      $q->where('name', 'like', '%'.$location.'%');
+                  });
+            });
         }
         if (isset($filters['min_price'])) {
             $query->where('price_per_night', '>=', $filters['min_price']);
@@ -31,8 +37,14 @@ class PropertyRepository implements PropertyRepositoryInterface
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', '%'.$search.'%')
-                  ->orWhere('location', 'like', '%'.$search.'%');
+                  ->orWhereHas('city', function ($q) use ($search) {
+                      $q->where('name', 'like', '%'.$search.'%');
+                  });
             });
+        }
+        if (isset($filters['is_featured'])) {
+            $isFeatured = filter_var($filters['is_featured'], FILTER_VALIDATE_BOOLEAN);
+            $query->where('is_featured', $isFeatured);
         }
         $query->orderByDesc('is_featured')->orderByDesc('created_at');
         return $query->paginate($perPage);

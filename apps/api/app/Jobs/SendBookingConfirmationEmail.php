@@ -3,13 +3,16 @@
 namespace App\Jobs;
 
 use App\Models\Booking;
+use App\Mail\BookingConfirmationMail;
+use App\Mail\AdminNewBookingMail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class SendBookingConfirmationEmail implements ShouldQueue
 {
@@ -25,11 +28,18 @@ class SendBookingConfirmationEmail implements ShouldQueue
         if (!$booking) {
             return;
         }
-        Log::info('Sending booking confirmation email', [
+
+        // Send confirmation email to guest
+        Mail::to($booking->user->email)->send(new BookingConfirmationMail($booking));
+
+        // Send new booking notification email to admin
+        $adminEmail = config('mail.from.address');
+        Mail::to($adminEmail)->send(new AdminNewBookingMail($booking));
+
+        Log::info('Separate booking emails sent to guest and admin', [
             'booking_id' => $booking->id,
-            'user_email' => $booking->user->email,
-            'property' => $booking->property->title,
-            'dates' => $booking->start_date->toDateString().' - '.$booking->end_date->toDateString(),
+            'guest_email' => $booking->user->email,
+            'admin_email' => $adminEmail,
         ]);
     }
 }

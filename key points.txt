@@ -26,7 +26,8 @@ Admin UX
 - Full CRUD on properties, inline edit form, media manager with file upload, booking moderation.
 - Pagination added to properties and bookings for scalability.
 - Refactored property management: separated 'Add Property' and 'Edit Property' into distinct pages for better maintainability and clearer user flow.
-- Implemented search and filter capabilities for both properties (by title/location and featured status) and bookings (by property title/user email and status) to improve administrative efficiency.
+- Implemented search and filter capabilities for both properties (by title/city name and featured status) and bookings (by property title/user email and status) to improve administrative efficiency.
+- Added "Clear" buttons to property listings for improved search UX, allowing users to quickly reset all active filters.
 - Redesigned login page for a more professional look, with styled success/error messages and automatic redirection to the dashboard upon successful login.
 - Enhanced error handling for property updates to provide more specific feedback from the API.
 - Resolved "No routes matched" errors by ensuring correct router configuration and `historyApiFallback` for direct URL access.
@@ -35,6 +36,8 @@ Frontend UX
 - Catchy gradient header using Tailwind, focused content sections.
 - Listings with filters and pagination; details show images (dummyimage.com) and uploaded media.
 - Booking flow redirects unauthenticated users to login and back to target.
+- Added "Change Password" page for guest users, providing a secure way to update credentials from the frontend dashboard.
+- Improved search UX with a "Clear Filters" button to reset multiple search parameters instantly.
 - Removed date picker from property details page to streamline the booking process.
 - Confirmed existing image slider/gallery functionality with auto-start and full-size image pop-up on click.
 
@@ -46,6 +49,8 @@ Seeding
 Tradeoffs
 - Simple availability model (no overlapping checks beyond service-level rules).
 - Client-side pagination controls based on Laravel paginator meta.
+- Tiered API Rate Limiting: Grouped routes into `auth`, `public`, and `private` throttle categories in `AppServiceProvider` and `api.php` to protect against brute-force and abuse while maintaining UX for standard users.
+- Boolean Filter Normalization: Fixed a bug where string-based query parameters (e.g., `?is_featured=true`) were failing database comparisons by using `filter_var(..., FILTER_VALIDATE_BOOLEAN)` in the repository layer.
 - No global state manager; localStorage token suffices for this scope.
 
 Troubleshooting

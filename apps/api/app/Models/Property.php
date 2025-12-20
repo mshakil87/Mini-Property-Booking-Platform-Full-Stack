@@ -15,6 +15,7 @@ class Property extends Model
         'title',
         'description',
         'price_per_night',
+        'location',
         'latitude',
         'longitude',
         'amenities',
